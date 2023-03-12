@@ -51,6 +51,18 @@ router.get('/', (req, res, next) => {
  *   - Properties: id, tree, location, height_ft, ground_circumference_ft
  */
 // Your code here
+router.get('/:id', (req, res, next) => {
+    const sql = 'SELECT * FROM trees WHERE id = ?';
+    const params = [req.params.id];
+    db.get(sql, params, (err, row) => {
+        try {
+            res.json(row);
+        } catch(err) {
+            next(err);
+        }
+    });
+});
+
 
 /**
  * INTERMEDIATE PHASE 4 - INSERT tree row into the database
