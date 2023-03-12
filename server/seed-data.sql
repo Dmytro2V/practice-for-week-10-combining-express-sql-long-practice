@@ -1,6 +1,5 @@
 -- BASIC PHASE 1A - DROP and CREATE table
 -- Your code here
-.open app.db
 DROP TABLE IF EXISTS trees;
 
 -- BASIC PHASE 1B - INSERT seed data

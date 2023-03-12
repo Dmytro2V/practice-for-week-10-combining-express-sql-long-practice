@@ -1,6 +1,9 @@
 // Instantiate router - DO NOT MODIFY
+const { application } = require('express');
 const express = require('express');
 const router = express.Router();
+// Process environment variables
+//require('dotenv').config();
 
 /**
  * BASIC PHASE 2, Step A - Instantiate SQLite and database
@@ -8,6 +11,12 @@ const router = express.Router();
  *   - Database permissions: read/write records in tables
  */
 // Your code here
+const sqlite3 =  require('sqlite3');
+console.log(process.env.DATA_SOURCE);
+const db = new sqlite3.Database(
+    process.env.DATA_SOURCE,
+    sqlite3.OPEN_READWRITE
+)
 
 /**
  * BASIC PHASE 2, Step B - List of all trees in the database
@@ -20,6 +29,17 @@ const router = express.Router();
  *   - Ordered by the height_ft from tallest to shortest
  */
 // Your code here
+router.get('/', (req, res, next) => {
+    const sql = 'SELECT id, tree FROM trees ORDER BY tree';
+    const params = [];
+    db.all(sql, params, (err, rows) => {
+        try {
+            res.json(rows);
+        } catch(err) {
+            next(err);
+        }
+    });
+});
 
 /**
  * BASIC PHASE 3 - Retrieve one tree with the matching id
