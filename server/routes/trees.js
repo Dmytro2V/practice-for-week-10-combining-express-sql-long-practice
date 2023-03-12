@@ -12,7 +12,7 @@ const router = express.Router();
  */
 // Your code here
 const sqlite3 =  require('sqlite3');
-console.log(process.env.DATA_SOURCE);
+
 const db = new sqlite3.Database(
     process.env.DATA_SOURCE,
     sqlite3.OPEN_READWRITE
@@ -33,10 +33,10 @@ router.get('/', (req, res, next) => {
     const sql = 'SELECT id, tree FROM trees ORDER BY tree';
     const params = [];
     db.all(sql, params, (err, rows) => {
-        try {
-            res.json(rows);
-        } catch(err) {
+        if (err) {
             next(err);
+        } else {
+            res.json(rows);
         }
     });
 });
@@ -55,10 +55,10 @@ router.get('/:id', (req, res, next) => {
     const sql = 'SELECT * FROM trees WHERE id = ?';
     const params = [req.params.id];
     db.get(sql, params, (err, row) => {
-        try {
-            res.json(row);
-        } catch(err) {
+        if (err) {
             next(err);
+        } else {
+            res.json(row);
         }
     });
 });
@@ -75,6 +75,21 @@ router.get('/:id', (req, res, next) => {
  *   - Value: success
  */
 // Your code here
+router.post('/', (req, res, next) => {
+    const sql = "INSERT INTO trees  (tree, location, height_ft, ground_circumference_ft) VALUES           (?, ?, ?, ?)        ";
+    const params = [req.body.name, req.body.location, req.body.height, req.body.size];
+    db.run(sql, params, (err) => {
+        if (err) {
+           
+            next(err);
+        } else {
+            res.json({
+                message: 'success'
+            });
+        };
+    });
+});
+
 
 /**
  * INTERMEDIATE PHASE 5 - DELETE a tree row from the database
